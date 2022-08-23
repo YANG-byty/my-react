@@ -8,10 +8,10 @@ import store from './store'
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
   // 下面来对接react-redux与store，让全部组件都能方便引用store。
-  <Provider store={store}>
-    <BrowserRouter>
+  <BrowserRouter>
+    <Provider store={store}>
       <App />
-    </BrowserRouter>
-  </Provider>
+    </Provider>
+  </BrowserRouter>
   // <App>的最外侧包襄了一个<BrowserRouter>或<HashRouter></HashRouter>
 )
