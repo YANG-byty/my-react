@@ -1,12 +1,12 @@
-import React, { Component } from 'react'
+import React from 'react'
+import style from './style.scss'
 
-export default class login extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {}
-  }
-
-  render() {
-    return <div>forestry</div>
-  }
+const forestry = () => {
+  return (
+    <div className="forestry">
+      <div className="screen-wrap">forestry</div>
+    </div>
+  )
 }
+
+export default forestry

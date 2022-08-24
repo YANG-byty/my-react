@@ -1,21 +1,36 @@
 import { Navigate } from 'react-router-dom'
 import Home from '../views/home'
 import Login from '../views/login'
+import Forestry from '../views/forestry'
+import LetterVisit from '../views/letter-visit'
+import Sport from '../views/sport'
 
 const indexRouter = [
-  //使用Navigate进行重定向
   {
     path: '/',
+    //使用Navigate进行重定向
     element: <Navigate to="/home" />,
   },
   {
     path: '/home',
+    //这里是你需要的路由组件
     element: <Home />,
   },
   {
     path: '/login',
-    //这里是你需要的路由组件
     element: <Login />,
+  },
+  {
+    path: '/forestry',
+    element: <Forestry />,
+  },
+  {
+    path: '/letter-visit',
+    element: <LetterVisit />,
+  },
+  {
+    path: '/sport',
+    element: <Sport />,
   },
 ]
 

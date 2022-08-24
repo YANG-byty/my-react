@@ -1,12 +1,12 @@
-import React, { Component } from 'react'
+import React from 'react'
+import './style.scss'
 
-export default class login extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {}
-  }
-
-  render() {
-    return <div>letter-visit</div>
-  }
+const letterVisit = () => {
+  return (
+    <div className="letter-visit">
+      <div className="screen-wrap">letterVisit</div>
+    </div>
+  )
 }
+
+export default letterVisit

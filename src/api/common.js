@@ -1,5 +1,9 @@
-import request from '../libs/request'
+import request from '../plugins/request'
 
-export function getInstanceById(data) {
-  return request('post', '/process/instance/getInstanceById', data)
+export const getInstanceById = (data) => {
+  return request({
+    url: '/process/instance/getInstanceById',
+    method: 'post',
+    data,
+  })
 }

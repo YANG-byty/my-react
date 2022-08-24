@@ -6,20 +6,33 @@ import * as actionCreators from '../../store/actionCreators'
 import './style.scss'
 import * as requestRefers from '../../api/common'
 
-import { DownloadOutlined } from '@ant-design/icons'
-import { Button, Radio } from 'antd'
-
 const Home = (props) => {
   const { myHomeData, setData } = props
   let navigate = useNavigate()
-  let arr = [1, 2, 3, 4, 5]
-  const liRender = (arr) => {
-    return arr.map((item, index) => {
-      return <li key={index}>{item}</li>
-    })
+  // 数据
+  let state = {
+    list: [
+      {
+        title: '林业领域大数据监督应用',
+        path: '/forestry',
+        icon: require('../../assets/images/linye-icon.png'),
+      },
+      {
+        title: '体育领域大数据监督应用',
+        path: '/sport',
+        icon: require('../../assets/images/tiyu-icon.png'),
+      },
+      {
+        title: '信访领域大数据监督应用',
+        path: '/letter-visit',
+        icon: require('../../assets/images/xinfang-icon.png'),
+      },
+    ],
   }
 
+  // 路由跳转
   const goToFn = (link) => {
+    console.log(link)
     navigate(link)
   }
 
@@ -31,22 +44,34 @@ const Home = (props) => {
         console.log(res)
       })
   }
-  getInstanceByIdFn()
+  // getInstanceByIdFn()
+
+  const clickFn = () => {
+    React.$Message.error('666666')
+  }
 
   return (
     <Fragment>
-      <Button type="primary" icon={<DownloadOutlined />} />
-      <ul className={classNames('ul')}>{liRender(arr)}</ul>
-      <div onClick={() => goToFn('/login')}>点击去Login</div>
-      <div className="ipt-con">home store: myData = {myHomeData}</div>
-      <div className="ipt-con">
-        <button
-          onClick={() => {
-            setData('123456')
-          }}
-        >
-          更改home store的myData
-        </button>
+      <div className="home">
+        <div className="screen-wrap">
+          <div className="head-bar">
+            <span>公权力大数据监督应用大屏</span>
+          </div>
+          <div className="menu flex-row row-center">
+            {state.list.map((item, index) => {
+              return (
+                <div
+                  key={index}
+                  className="item flex-col col-center"
+                  onClick={() => goToFn(item.path)}
+                >
+                  <img src={item.icon} alt="" />
+                  <p className="name">{item.title}</p>
+                </div>
+              )
+            })}
+          </div>
+        </div>
       </div>
     </Fragment>
   )

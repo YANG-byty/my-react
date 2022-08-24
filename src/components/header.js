@@ -1,16 +1,16 @@
 import React, { Component } from 'react'
-
-export default class header extends Component {
+import { connect } from 'react-redux'
+export class Header extends Component {
   componentDidMount() {}
 
   render() {
     return (
       <div className="header-box flex-row col-center">
-        {/* <img
+        <img
           className="logo"
           src={require('../assets/images/logo.png')}
           alt=""
-        /> */}
+        />
       </div>
     )
   }
@@ -22,3 +22,5 @@ const mapStateToProps = (state) => {
     myHomeData: state.getIn(['myData']),
   }
 }
+
+export default connect(mapStateToProps, null)(Header)
