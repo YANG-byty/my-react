@@ -1,6 +1,5 @@
 import React, { Fragment } from 'react'
 import { useNavigate } from 'react-router-dom'
-import classNames from 'classnames' //样式类合并器
 import { connect } from 'react-redux'
 import * as actionCreators from '../../store/actionCreators'
 import './style.scss'

@@ -1,4 +1,5 @@
 classNames  样式类合并器
+import classNames from 'classnames' //样式类合并器
 用于样式动态添加
 例：<ul className={classNames({ 'ul': true })}>666</ul>
 

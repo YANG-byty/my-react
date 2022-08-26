@@ -17,8 +17,6 @@
   },
   "scripts": {
     "start:dev": "dotenv -e .env.dev react-app-rewired start",
-    "start:test": "dotenv -e .env.test react-app-rewired start",
-    "start:prod": "dotenv -e .env.prod react-app-rewired start",
     "build:dev": "dotenv -e .env.dev react-app-rewired build",
     "build:test": "dotenv -e .env.test react-app-rewired build",
     "build:prod": "dotenv -e .env.prod react-app-rewired build"
@@ -47,8 +45,10 @@
     "axios": "^0.27.2",
     "classnames": "^2.3.1",
     "dotenv-cli": "^6.0.0",
+    "echarts": "^5.3.3",
     "immutable": "^4.1.0",
     "js-cookie": "^3.0.1",
+    "moment": "^2.29.4",
     "node-sass": "^7.0.1",
     "react-app-rewired": "^2.2.1",
     "react-redux": "^8.0.2",
