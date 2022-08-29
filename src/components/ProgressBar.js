@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import * as echarts from 'echarts'
 
 export default class ProgressBar extends Component {
   constructor(props) {
@@ -7,10 +8,8 @@ export default class ProgressBar extends Component {
     this.color = props.color || '#FF4444'
     this.data = props.data || [0, 100]
   }
-
   // 进度条
   progressBarChart() {
-    // console.log(this.data, this.progressBar);
     let myChart = echarts.init(document.getElementById(this.progressBar))
     window.addEventListener('resize', () => {
       myChart.resize()
@@ -273,8 +272,11 @@ export default class ProgressBar extends Component {
     }
     myChart.setOption(option)
   }
+  componentDidMount() {
+    this.progressBarChart()
+  }
 
   render() {
-    return <div class="progress-bar" id={this.progressBar}></div>
+    return <div className="progress-bar" id={this.progressBar}></div>
   }
 }

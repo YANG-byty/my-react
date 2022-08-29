@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import classNames from 'classnames' //样式类合并器
 import * as echarts from 'echarts'
-import { UpOutlined } from '@ant-design/icons'
 import './style.scss'
+import JsSeamlessScroll from '../../components/JsSeamlessScroll'
 import SelectYear from '../../components/SelectYear'
+import ProgressBar from '../../components/ProgressBar'
 
 class forestry extends Component {
   constructor(props) {
@@ -32,7 +33,200 @@ class forestry extends Component {
         yellowWarning: 99,
         yellowPercentage: 99,
       },
-      collapseList: [],
+      collapseList: [
+        {
+          count: 145,
+          id: '2',
+          name: '代持公益林',
+          total: 145,
+          warningType: 2,
+          isDropup: true,
+        },
+        {
+          count: 120,
+          id: '3',
+          name: '代持公益林',
+          total: 145,
+          warningType: 2,
+          isDropup: false,
+        },
+      ],
+      forestryModelId: '',
+      listData: [
+        {
+          villageName: '666',
+          year: '2022',
+          difference: '888',
+          warningType: '1',
+          status: '状态',
+        },
+        {
+          villageName: '666',
+          year: '2022',
+          difference: '888',
+          warningType: '1',
+          status: '状态',
+        },
+        {
+          villageName: '666',
+          year: '2022',
+          difference: '888',
+          warningType: '1',
+          status: '状态',
+        },
+        {
+          villageName: '666',
+          year: '2022',
+          difference: '888',
+          warningType: '1',
+          status: '状态',
+        },
+        {
+          villageName: '666',
+          year: '2022',
+          difference: '888',
+          warningType: '1',
+          status: '状态',
+        },
+        {
+          villageName: '666',
+          year: '2022',
+          difference: '888',
+          warningType: '1',
+          status: '状态',
+        },
+        {
+          villageName: '666',
+          year: '2022',
+          difference: '888',
+          warningType: '1',
+          status: '状态',
+        },
+        {
+          villageName: '666',
+          year: '2022',
+          difference: '888',
+          warningType: '1',
+          status: '状态',
+        },
+      ],
+      areaMapList: [
+        {
+          id: '1',
+          name: '市本级',
+          nameEn: 'shibenji',
+          dataList: [
+            {
+              name: '公益林补偿金',
+              count: 99,
+            },
+          ],
+        },
+        {
+          id: '9',
+          name: '莲都',
+          nameEn: 'liandu',
+          dataList: [
+            {
+              name: '公益林补偿金',
+              count: 99,
+            },
+          ],
+        },
+        {
+          id: '11',
+          name: '龙泉',
+          nameEn: 'longquan',
+          dataList: [
+            {
+              name: '公益林补偿金',
+              count: 99,
+            },
+          ],
+        },
+        {
+          id: '6',
+          name: '青田',
+          nameEn: 'qingtian',
+          dataList: [
+            {
+              name: '公益林补偿金',
+              count: 99,
+            },
+          ],
+        },
+        {
+          id: '5',
+          name: '云和',
+          nameEn: 'yunhe',
+          dataList: [
+            {
+              name: '公益林补偿金',
+              count: 99,
+            },
+          ],
+        },
+        {
+          id: '7',
+          name: '庆元',
+          nameEn: 'qinyuan',
+          dataList: [
+            {
+              name: '公益林补偿金',
+              count: 99,
+            },
+          ],
+        },
+        {
+          id: '4',
+          name: '缙云',
+          nameEn: 'jinyun',
+          dataList: [
+            {
+              name: '公益林补偿金',
+              count: 99,
+            },
+          ],
+        },
+        {
+          id: '2',
+          name: '遂昌',
+          nameEn: 'suichang',
+          dataList: [
+            {
+              name: '公益林补偿金',
+              count: 99,
+            },
+          ],
+        },
+        {
+          id: '3',
+          name: '松阳',
+          nameEn: 'songyang',
+          dataList: [
+            {
+              name: '公益林补偿金',
+              count: 99,
+            },
+          ],
+        },
+        {
+          id: '8',
+          name: '景宁',
+          nameEn: 'jinning',
+          dataList: [
+            {
+              name: '公益林补偿金',
+              count: 99,
+            },
+          ],
+        },
+      ],
+      areaMapTabIndex: 0,
+      areaMapTitle: '',
+      areaId: '',
+      showMaxMap: false,
+      maxMapObj: {},
     }
   }
   // 获取子组件的选中的时间
@@ -138,47 +332,53 @@ class forestry extends Component {
   }
   // 折叠
   isDropupFn(index) {
-    this.forestryModelId = this.collapseList[index].id
-    this.collapseList[index].isDropup = !this.collapseList[index].isDropup
-    if (this.collapseList[index].isDropup) {
+    let collapseList = this.state.collapseList
+    collapseList[index].isDropup = !collapseList[index].isDropup
+    if (collapseList[index].isDropup) {
       this.listData = []
-      this.getWarningModelPageFn()
+      // this.getWarningModelPageFn()
     }
-    let arr = this.collapseList
-
-    this.collapseList = arr.map((item, idx) => {
+    collapseList = collapseList.map((item, idx) => {
       if (index != idx) {
         item.isDropup = false
       }
       return item
     })
+    this.setState({
+      forestryModelId: this.state.collapseList[index].id,
+      collapseList,
+    })
   }
   // 渲染-预警模型
   renderCollapse() {
-    this.state.collapseList.map((item, index) => {
+    return this.state.collapseList.map((item, index) => {
       return (
         <div key={index}>
           <div className="collapse disFlex">
-            <div onClick={() => this.showModalFn(item.id)} style="width: 45%">
+            <div
+              onClick={() => this.showModalFn(item.id)}
+              style={{ width: '45%' }}
+            >
               {item.name}
             </div>
-            <div className="disFlex row-between" style="width: 55%">
-              <progress-bar
+            <div className="disFlex row-between" style={{ width: '55%' }}>
+              <ProgressBar
                 progressBar={'progress-bar' + item.id}
-                data={'[item.count, item.total]'}
+                data={[item.count, item.total]}
               />
-              <div className="disFlex" style="margin-left: 0.75rem">
+              <div className="disFlex" style={{ marginLeft: '0.75rem' }}>
                 {item.count}条
-                {/* <Icon
-                  class="down"
-                  type="item.isDropup ? 'ios-arrow-up' : 'ios-arrow-down'"
+                <i
+                  className={classNames(
+                    'down iconfont',
+                    item.isDropup ? 'icon-shangla' : 'icon-xiala'
+                  )}
                   onClick={() => this.isDropupFn(index)}
-                /> */}
-                <UpOutlined />
+                ></i>
               </div>
             </div>
           </div>
-          <div v-if="item.isDropup">
+          {item.isDropup && (
             <div className="table-box">
               <div className="thead">
                 <div className="column one">村名</div>
@@ -187,30 +387,81 @@ class forestry extends Component {
                 <div className="column one">状态</div>
               </div>
               <div className="tbody">
-                {/* <vue-seamless-scroll
-                        className="seamless-warp list"
-                        v-if="listData.length > 0"
-                        :data="listData"
-                        :class-option="optionSingleHeightTime"
-                      >
-                        <div className="item" v-for="item in listData">
-                          <div className="column one">{{ item.villageName }}</div>
-                          <div className="column one">{{ item.year }}</div>
-                          <div className="column one">{{ item.difference }}元</div>
+                {this.state.listData.length > 0 ? (
+                  <JsSeamlessScroll
+                    className="seamless-warp list"
+                    datas={this.state.listData}
+                    singleHeight={41}
+                    singleWaitTime={2000}
+                    hover={true}
+                  >
+                    {this.state.listData.map((value, index) => {
+                      return (
+                        <div className="item" key={index}>
+                          <div className="column one">{value.villageName}</div>
+                          <div className="column one">{value.year}</div>
+                          <div className="column one">{value.difference}元</div>
                           <div className="column one">
-                            <span :className="[item.warningType == 1 ? 'red' : 'yellow']">{ item.status }</span>
+                            <span
+                              className={classNames(
+                                value.warningType == 1 ? 'red' : 'yellow'
+                              )}
+                            >
+                              {value.status}
+                            </span>
                           </div>
                         </div>
-                      </vue-seamless-scroll> */}
-                <div v-else className="no-data">
-                  暂无数据
-                </div>
+                      )
+                    })}
+                  </JsSeamlessScroll>
+                ) : (
+                  <div v-else className="no-data">
+                    暂无数据
+                  </div>
+                )}
               </div>
             </div>
-          </div>
+          )}
         </div>
       )
     })
+  }
+  // 地图切换
+  areaMapTabFn(index, item, flag) {
+    if (flag) {
+      if (this.state.areaMapTabIndex != index) {
+        this.setState({
+          areaMapTabIndex: index,
+          areaMapTitle: item.title,
+          areaId: index == 0 ? '' : this.state.areaMapList[index - 1].id,
+        })
+        if (index != 1) {
+          this.setState({
+            showMaxMap: true,
+            maxMapObj: item,
+          })
+        }
+      } else {
+        this.cancelMap()
+      }
+    } else {
+      if (this.state.areaMapTabIndex != index) {
+        this.setState({
+          areaMapTabIndex: index,
+          areaMapTitle: item.title,
+          areaId: index == 0 ? '' : this.state.areaMapList[index - 1].id,
+        })
+      }
+      this.setState({
+        showMaxMap: false,
+      })
+    }
+  }
+  // 取消选中地图
+  cancelMap() {
+    this.areaMapTabIndex = 0
+    this.areaMapTitle = ''
+    this.areaId = ''
   }
 
   componentDidMount() {
@@ -286,7 +537,46 @@ class forestry extends Component {
                     <em></em>
                   </div>
                   <div className="alert-box">预警模型</div>
-                  <div className="collapse-wrap">{this.renderCollapse}</div>
+                  <div className="collapse-wrap">{this.renderCollapse()}</div>
+                </div>
+              </div>
+              <div className="middle-side">
+                <div className="side-box">
+                  <div className="side-title">各区县林业预警统计</div>
+                  <div className="flex-row row-between col-center">
+                    {/* 导航线 */}
+                    <div className="map-type">
+                      <div
+                        className={classNames(
+                          this.state.areaMapTabIndex == 0 ? 'active' : '',
+                          'item',
+                          'flex-row',
+                          'col-center'
+                        )}
+                        onClick={() => this.areaMapTabFn(0, '')}
+                      >
+                        <em></em>
+                        <span>丽水市</span>
+                      </div>
+                      {this.state.areaMapList.map((item, index) => (
+                        <div
+                          key={item.id}
+                          className={classNames(
+                            this.state.areaMapTabIndex == ++index
+                              ? 'active'
+                              : '',
+                            'item',
+                            'flex-row',
+                            'col-center'
+                          )}
+                          onClick={() => this.areaMapTabFn(index, item)}
+                        >
+                          <em></em>
+                          <span>{item.name}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

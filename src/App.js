@@ -1,4 +1,5 @@
 import './assets/css/common.scss'
+import './assets/icon-font/iconfont.css'
 import { useRoutes } from 'react-router-dom'
 import indexRouter from './router'
 import { useLocation } from 'react-router'
