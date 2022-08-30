@@ -870,17 +870,24 @@
       background-size: 0.75rem;
       background-position: left center;
     }
-
-    .ivu-tooltip-arrow {
-      border-width: 0;
-      // border-bottom-color: rgba(51, 51, 51, 0.8);
-    }
-
-    .ivu-tooltip-inner {
-      background-color: rgba(51, 51, 51, 0.8);
-      border-radius: 8px;
-      border: 1px solid #0073dd;
-      font-size: 0.75rem;
-    }
   }
+}
+
+.ant-tooltip-placement-bottom {
+  padding-top: 0;
+}
+
+.ant-tooltip-arrow,
+.ivu-tooltip-arrow {
+  border-width: 0;
+  // border-bottom-color: rgba(51, 51, 51, 0.8);
+  display: none;
+}
+
+.ant-tooltip-inner,
+.ivu-tooltip-inner {
+  background-color: rgba(51, 51, 51, 0.8);
+  border-radius: 8px;
+  border: 1px solid #0073dd;
+  font-size: 0.75rem;
 }

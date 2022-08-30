@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
 import classNames from 'classnames' //样式类合并器
 import * as echarts from 'echarts'
+import { Tooltip } from 'antd'
 import './style.scss'
 import JsSeamlessScroll from '../../components/JsSeamlessScroll'
 import SelectYear from '../../components/SelectYear'
 import ProgressBar from '../../components/ProgressBar'
+import CircinateChart from '../../components/CircinateChart'
 
 class forestry extends Component {
   constructor(props) {
@@ -227,6 +229,103 @@ class forestry extends Component {
       areaId: '',
       showMaxMap: false,
       maxMapObj: {},
+      activeModel: 0,
+      tabBtnList: [
+        { name: '全部模型', id: '' },
+        { name: '代持公益林', id: '1' },
+        { name: '代持公益林2', id: '2' },
+        { name: '代持公益林3', id: '3' },
+        { name: '代持公益林4', id: '4' },
+        { name: '代持公益林5', id: '5' },
+        { name: '代持公益林6', id: '6' },
+        { name: '代持公益林7', id: '7' },
+        { name: '代持公益林8', id: '8' },
+        { name: '代持公益林9', id: '9' },
+        { name: '代持公益林10', id: '10' },
+        { name: '代持公益林11', id: '11' },
+        { name: '代持公益林12', id: '12' },
+      ],
+      warningConditionnArr: [
+        {
+          name: '红色预警量',
+          color: '#FF4444',
+          count: 6,
+          percentage: '0%',
+          total: 20,
+          type: 1,
+        },
+        {
+          name: '黄色预警量',
+          color: '#FFD159',
+          count: 2,
+          percentage: '0%',
+          total: 10,
+          type: 2,
+        },
+      ],
+      disposeConditionArr: [
+        {
+          name: '已处理量',
+          color: '#0073DD',
+          count: 6,
+          percentage: '0%',
+          total: 20,
+          type: 1,
+        },
+        {
+          name: '未处理量',
+          color: '#00F0FF',
+          count: 2,
+          percentage: '0%',
+          total: 10,
+          type: 2,
+        },
+      ],
+      disposeResultArr: [
+        {
+          name: '制度成效',
+          num: '0个',
+        },
+        {
+          name: '典型案例',
+          num: '0个',
+        },
+        {
+          name: '挽回直接损失',
+          num: '0元',
+        },
+        {
+          name: '处理人数',
+          num: '0个',
+        },
+        {
+          name: '查实率',
+          num: '0%',
+        },
+      ],
+      issueList: [
+        {
+          id: '1564296827416457218',
+          name: '构罪不捕案件超期未移送-经济案件',
+          percentage: '1%',
+          warningType: 1,
+          count: 2,
+        },
+        {
+          id: '1564296827416457218',
+          name: '构罪不捕案件超期未移送-经济案件',
+          percentage: '1%',
+          warningType: 1,
+          count: 2,
+        },
+        {
+          id: '1564296827416457218',
+          name: '构罪不捕案件超期未移送-经济案件',
+          percentage: '1%',
+          warningType: 1,
+          count: 2,
+        },
+      ],
     }
   }
   // 获取子组件的选中的时间
@@ -394,6 +493,7 @@ class forestry extends Component {
                     singleHeight={41}
                     singleWaitTime={2000}
                     hover={true}
+                    scrollSwitch={this.state.listData.length > 3}
                   >
                     {this.state.listData.map((value, index) => {
                       return (
@@ -463,6 +563,348 @@ class forestry extends Component {
     this.areaMapTitle = ''
     this.areaId = ''
   }
+  // 点击具体模型
+  activeModelFn(index, id) {
+    if (this.state.activeModel == index) {
+      return
+    }
+    this.setState({
+      activeModel: index,
+      activeModelId: id,
+    })
+  }
+  // 各区县预警情况对比
+  countyChart(data) {
+    let xData = [],
+      arr = [[], []]
+    data.map((item) => {
+      xData.push(item.areaName)
+      arr[0].push(item.yellowCount)
+      arr[1].push(item.redCount)
+    })
+    let myChart = echarts.init(document.getElementById('county-chart'))
+    window.addEventListener('resize', () => {
+      myChart.resize()
+    })
+    let option = {
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'shadow',
+          textStyle: {
+            color: '#fff',
+          },
+        },
+      },
+      legend: {
+        x: 'right',
+        textStyle: {
+          color: '#fff',
+          fontSize: 14,
+        },
+      },
+      grid: {
+        borderWidth: 0,
+        top: '16%',
+        bottom: '10%',
+        right: '2%',
+        textStyle: {
+          color: '#fff',
+        },
+      },
+      calculable: true,
+      xAxis: [
+        {
+          type: 'category',
+          axisLine: {
+            lineStyle: {
+              color: 'rgba(0,115,221,1)',
+            },
+          },
+          splitLine: {
+            show: false,
+          },
+          axisTick: {
+            show: false,
+          },
+          splitArea: {
+            show: false,
+          },
+          axisLabel: {
+            interval: 0,
+            color: 'rgba(255,255,255,1)',
+            fontSize: 12,
+          },
+          data: xData,
+        },
+      ],
+      yAxis: [
+        {
+          type: 'value',
+          splitLine: {
+            show: false,
+          },
+          axisLine: {
+            show: false,
+          },
+          axisTick: {
+            show: false,
+          },
+          axisLabel: {
+            interval: 0,
+            color: 'rgba(255,255,255,1)',
+            fontSize: 12,
+          },
+          splitArea: {
+            show: false,
+          },
+          //分格线
+          splitLine: {
+            lineStyle: {
+              type: 'dashed', //虚线
+              color: '#0073DD',
+              opacity: 0.5,
+            },
+          },
+        },
+      ],
+      series: [
+        {
+          name: '黄色预警',
+          type: 'bar',
+          stack: '总量',
+          barMaxWidth: 22,
+          barGap: '10%',
+          itemStyle: {
+            normal: {
+              color: {
+                type: 'linear',
+                x: 0,
+                y: 0,
+                x2: 0,
+                y2: 1,
+                colorStops: [
+                  {
+                    offset: 0,
+                    color: 'rgba(235, 255, 0, 1)', // 0% 处的颜色
+                  },
+                  {
+                    offset: 1,
+                    color: 'rgba(235, 255, 0, .2)', // 100% 处的颜色
+                  },
+                ],
+                global: false, // 缺省为 false
+              },
+            },
+          },
+          data: arr[0],
+        },
+        {
+          name: '红色预警',
+          type: 'bar',
+          stack: '总量',
+          barMaxWidth: 22,
+          itemStyle: {
+            normal: {
+              color: {
+                type: 'linear',
+                x: 0,
+                y: 0,
+                x2: 0,
+                y2: 1,
+                colorStops: [
+                  {
+                    offset: 0,
+                    color: 'rgba(255, 92, 0, 1)', // 0% 处的颜色
+                  },
+                  {
+                    offset: 1,
+                    color: 'rgba(255, 92, 0, .2)', // 100% 处的颜色
+                  },
+                ],
+                global: false, // 缺省为 false
+              },
+              barBorderRadius: 0,
+            },
+          },
+          data: arr[1],
+        },
+      ],
+    }
+    myChart.setOption(option)
+  }
+  // 历年预警趋势对比
+  overYearsChart(data) {
+    let xData = [],
+      arr = []
+    data.map((item) => {
+      xData.push(item.year)
+      arr.push(item.count)
+    })
+    let myChart = echarts.init(document.getElementById('overYears-chart'))
+    window.addEventListener('resize', () => {
+      myChart.resize()
+    })
+    let option = {
+      tooltip: {
+        trigger: 'axis',
+        // padding: 0,
+        // backgroundColor: 'transparent',
+        // borderColor: 'none',
+        axisPointer: {
+          type: 'shadow',
+          textStyle: {
+            color: '#fff',
+          },
+        },
+        formatter: function (val) {
+          let index = val[0].dataIndex
+          let list = data[index].areaJson
+          let keys = Object.keys(list)
+          let values = Object.values(list)
+          var text = `<div class="flex-row row-between" style="color:#00F0FF">丽水市 <span style="margin-left:10px">${data[index].count}条</span></div>`
+          keys.map((item, idx) => {
+            text += `<div class="flex-row row-between">${item} <span style="margin-left:10px">${values[idx]}</span></div>`
+          })
+          return `<div >${text}</div>`
+        },
+      },
+      grid: {
+        borderWidth: 0,
+        top: '6%',
+        bottom: '10%',
+        right: '2%',
+        textStyle: {
+          color: '#fff',
+        },
+      },
+      calculable: true,
+      xAxis: [
+        {
+          type: 'category',
+          axisLine: {
+            lineStyle: {
+              color: 'rgba(0,115,221,1)',
+            },
+          },
+          splitLine: {
+            show: false,
+          },
+          axisTick: {
+            show: false,
+          },
+          splitArea: {
+            show: false,
+          },
+          axisLabel: {
+            interval: 0,
+            color: 'rgba(255,255,255,1)',
+            fontSize: 12,
+          },
+          data: xData,
+        },
+      ],
+      yAxis: [
+        {
+          type: 'value',
+          splitLine: {
+            show: false,
+          },
+          axisLine: {
+            show: false,
+          },
+          axisTick: {
+            show: false,
+          },
+          axisLabel: {
+            interval: 0,
+            color: 'rgba(255,255,255,1)',
+            fontSize: 12,
+          },
+          splitArea: {
+            show: false,
+          },
+          //分格线
+          splitLine: {
+            lineStyle: {
+              type: 'dashed', //虚线
+              color: '#0073DD',
+              opacity: 0.5,
+            },
+          },
+        },
+      ],
+      series: [
+        {
+          name: '黄色预警',
+          type: 'bar',
+          stack: '总量',
+          barMaxWidth: 22,
+          barGap: '10%',
+          itemStyle: {
+            normal: {
+              color: {
+                type: 'linear',
+                x: 0,
+                y: 0,
+                x2: 0,
+                y2: 1,
+                colorStops: [
+                  {
+                    offset: 0,
+                    color: 'rgba(0, 209, 255, 1)', // 0% 处的颜色
+                  },
+                  {
+                    offset: 1,
+                    color: 'rgba(0, 209, 255, 0)', // 100% 处的颜色
+                  },
+                ],
+                global: false, // 缺省为 false
+              },
+            },
+          },
+          data: arr,
+        },
+        {
+          name: '总数',
+          type: 'line',
+          symbolSize: 8,
+          symbol: 'circle',
+          itemStyle: {
+            normal: {
+              color: 'rgba(0, 240, 255, 1)',
+              barBorderRadius: 0,
+            },
+          },
+          lineStyle: {
+            normal: {
+              width: 2,
+              color: {
+                type: 'linear',
+                x: 0,
+                y: 0,
+                x2: 0,
+                y2: 1,
+                colorStops: [
+                  {
+                    offset: 0,
+                    color: 'rgba(0, 206, 245, 1)', // 0% 处的颜色
+                  },
+                  {
+                    offset: 1,
+                    color: 'rgba(0, 206, 245, 1)', // 100% 处的颜色
+                  },
+                ],
+                global: false, // 缺省为 false
+              },
+            },
+          },
+          data: arr,
+        },
+      ],
+    }
+    myChart.setOption(option)
+  }
 
   componentDidMount() {
     let data = {
@@ -473,6 +915,143 @@ class forestry extends Component {
       yellowWarning: 0,
     }
     this.warningChart(data)
+
+    let data2 = [
+      {
+        areaName: '市本级',
+        redCount: 10,
+        yellowCount: 2,
+      },
+      {
+        areaName: '莲都',
+        redCount: 20,
+        yellowCount: 30,
+      },
+      {
+        areaName: '龙泉',
+        redCount: 22,
+        yellowCount: 11,
+      },
+      {
+        areaName: '青田',
+        redCount: 12,
+        yellowCount: 12,
+      },
+      {
+        areaName: '云和',
+        redCount: 12,
+        yellowCount: 12,
+      },
+      {
+        areaName: '庆元',
+        redCount: 12,
+        yellowCount: 12,
+      },
+      {
+        areaName: '缙云',
+        redCount: 12,
+        yellowCount: 12,
+      },
+      {
+        areaName: '遂昌',
+        redCount: 12,
+        yellowCount: 12,
+      },
+      {
+        areaName: '松阳',
+        redCount: 12,
+        yellowCount: 12,
+      },
+      {
+        areaName: '景宁',
+        redCount: 12,
+        yellowCount: 12,
+      },
+    ]
+    this.countyChart(data2)
+    let data3 = [
+      {
+        year: 2018,
+        count: 100,
+        areaJson: {
+          市本级: 10,
+          莲都: 10,
+          龙泉: 10,
+          青田: 10,
+          云和: 10,
+          庆元: 10,
+          缙云: 10,
+          遂昌: 10,
+          松阳: 10,
+          景宁: 10,
+        },
+      },
+      {
+        year: 2019,
+        count: 130,
+        areaJson: {
+          市本级: 10,
+          莲都: 10,
+          龙泉: 10,
+          青田: 10,
+          云和: 10,
+          庆元: 10,
+          缙云: 10,
+          遂昌: 10,
+          松阳: 10,
+          景宁: 10,
+        },
+      },
+      {
+        year: 2020,
+        count: 50,
+        areaJson: {
+          市本级: 10,
+          莲都: 10,
+          龙泉: 10,
+          青田: 10,
+          云和: 10,
+          庆元: 10,
+          缙云: 10,
+          遂昌: 10,
+          松阳: 10,
+          景宁: 10,
+        },
+      },
+      {
+        year: 2021,
+        count: 300,
+        areaJson: {
+          市本级: 10,
+          莲都: 10,
+          龙泉: 10,
+          青田: 10,
+          云和: 10,
+          庆元: 10,
+          缙云: 10,
+          遂昌: 10,
+          松阳: 10,
+          景宁: 10,
+        },
+      },
+      {
+        year: 2022,
+        count: 200,
+        areaJson: {
+          市本级: 10,
+          莲都: 10,
+          龙泉: 10,
+          青田: 10,
+          云和: 10,
+          庆元: 10,
+          缙云: 10,
+          遂昌: 10,
+          松阳: 10,
+          景宁: 10,
+        },
+      },
+    ]
+    this.overYearsChart(data3)
   }
   render() {
     return (
@@ -576,7 +1155,240 @@ class forestry extends Component {
                         </div>
                       ))}
                     </div>
+                    {/* 地图 */}
+                    {!this.state.showMaxMap ? (
+                      <div className="map-box" v-if="">
+                        {this.state.areaMapList.map((item, index) => (
+                          <div
+                            className={classNames(
+                              'item',
+                              this.state.areaMapTabIndex == ++index
+                                ? 'active-map'
+                                : '',
+                              item.nameEn
+                            )}
+                            key={index}
+                            onClick={() => this.areaMapTabFn(index, item, 1)}
+                          >
+                            <div className="name">{item.name}</div>
+                            <div className="more">
+                              {item.dataList.length > 0 ? (
+                                <ul>
+                                  {item.dataList.map((value, idx) => (
+                                    <li
+                                      className="flex-row col-center"
+                                      key={idx}
+                                    >
+                                      <em></em>
+                                      <span>
+                                        {value.name + '（' + value.count + '）'}
+                                      </span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              ) : (
+                                <div
+                                  style={{
+                                    color: '#fff',
+                                    fontSize: '0.875rem',
+                                  }}
+                                >
+                                  暂无数据
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                        <div
+                          className="map-name"
+                          onClick={() => this.cancelMap()}
+                        >
+                          丽水市
+                          {this.state.areaMapTitle
+                            ? '·' + this.state.areaMapTitle
+                            : ''}
+                        </div>
+                      </div>
+                    ) : (
+                      ''
+                    )}
+                    {/* 显示大图 */}
+                    {this.state.showMaxMap ? (
+                      <div
+                        className="map-box"
+                        style={{ backgroundImage: 'none', cursor: 'pointer' }}
+                        onClick={() =>
+                          this.setState({
+                            showMaxMap: false,
+                          })
+                        }
+                      >
+                        <div
+                          className={classNames(
+                            'item',
+                            'active-map',
+                            this.state.maxMapObj.nameEn
+                          )}
+                          id="maxMap"
+                        >
+                          <div className="name">
+                            {this.state.maxMapObj.name}
+                          </div>
+                          <div className="more" style={{ right: '27rem' }}>
+                            <ul>
+                              {this.state.maxMapObj.dataList.map(
+                                (value, idx) => (
+                                  <li className="flex-row col-center" key={idx}>
+                                    <em></em>
+                                    <span>
+                                      {value.name + '（' + value.count + '）'}
+                                    </span>
+                                  </li>
+                                )
+                              )}
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      ''
+                    )}
                   </div>
+                  <ul className="model-wrap">
+                    {this.state.tabBtnList.map((item, index) => (
+                      <li
+                        className={classNames(
+                          'model-btn',
+                          this.state.activeModel == index ? 'active-model' : ''
+                        )}
+                        key={index}
+                        onClick={() => this.activeModelFn(index, item.id)}
+                      >
+                        {item.name}
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="line-box">
+                    <em></em>
+                  </div>
+                  <div className="situation-wrap">
+                    <div className="title-wrap">
+                      <div className="title">预警情况</div>
+                      <div
+                        className="situation"
+                        onClick={() =>
+                          this.showModalFn(
+                            this.state.warningConditionnArr[0].forestryModelId
+                          )
+                        }
+                      >
+                        <CircinateChart
+                          data={this.state.warningConditionnArr}
+                        />
+                        <div className="bar-wrap">
+                          {this.state.warningConditionnArr.map(
+                            (item, index) => (
+                              <div key={index}>
+                                <div className="title-num row-between flex-row">
+                                  {item.name}：{' '}
+                                  <span style={{ color: item.color }}>
+                                    {item.count}
+                                  </span>
+                                  {item.percentage}
+                                </div>
+                                <ProgressBar
+                                  progressBar={'progress-warning' + index}
+                                  color={item.color}
+                                  data={[item.count, item.total]}
+                                />
+                              </div>
+                            )
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="title-wrap">
+                      <div className="title">处置情况</div>
+                      <div
+                        className="situation"
+                        onClick={() =>
+                          this.showModalFn(
+                            this.state.disposeConditionArr[0].forestryModelId
+                          )
+                        }
+                      >
+                        <CircinateChart
+                          data={this.state.disposeConditionArr}
+                          circinateId={'disposal-chart'}
+                          color={['#0073DD', '#00F0FF']}
+                        />
+                        <div className="bar-wrap">
+                          {this.state.disposeConditionArr.map((item, index) => (
+                            <div key={index}>
+                              <div className="title-num row-between flex-row">
+                                {item.name}：{' '}
+                                <span style={{ color: item.color }}>
+                                  {item.count}
+                                </span>
+                                {item.percentage}
+                              </div>
+                              <ProgressBar
+                                progressBar={'progress-condition' + index}
+                                color={item.color}
+                                data={[item.count, item.total]}
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="statistics-wrap">
+                      <div className="title">处置成效</div>
+                      <div className="wrap">
+                        {this.state.disposeResultArr.map((item, index) => (
+                          <div key={index}>
+                            <span>{item.name}：</span>
+                            <span>{item.num}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="right-side">
+                <div className="side-box">
+                  <div className="side-title">预警对比</div>
+                  <div className="line-box mt12">
+                    <em></em>
+                  </div>
+                  <div className="alert-box">高频问题</div>
+                  <div className="option-wrap">
+                    {this.state.issueList.map((item, index) => (
+                      <div
+                        className="option"
+                        key={index}
+                        onClick={() => this.showModalFn(item.id)}
+                      >
+                        <div className="title">{++index}</div>
+                        <div className="text-content">
+                          <div className="bar">
+                            <span>{item.count}</span> 条
+                          </div>
+                          <div>{item.percentage}</div>
+                          <div className="omit">
+                            <Tooltip title={item.name} placement="bottom">
+                              {item.name}
+                            </Tooltip>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="alert-box">各区县预警情况对比</div>
+                  <div className="county-chart" id="county-chart"></div>
+                  <div className="alert-box">历年预警趋势对比</div>
+                  <div className="county-chart" id="overYears-chart"></div>
                 </div>
               </div>
             </div>
