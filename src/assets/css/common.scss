@@ -45,6 +45,10 @@ body {
     .ant-picker-input>input {
       width: 6rem;
       text-align: center;
+
+      &::placeholder {
+        color: #0073dd;
+      }
     }
 
     .ant-picker-input>input,

@@ -35,47 +35,6 @@
       .side-box {
         &.info {
           height: 2rem;
-
-          .ivu-input-wrapper {
-            .ivu-input {
-              width: 6.875rem;
-              color: #fff;
-              font-size: 1rem;
-              font-weight: bold;
-              border: none;
-              background: transparent;
-
-              &:focus {
-                box-shadow: none;
-              }
-
-              &::-webkit-input-placeholder {
-                color: #0073dd !important;
-              }
-
-              /* 使用webkit内核的浏览器 */
-              &:-moz-placeholder {
-                color: #0073dd !important;
-              }
-
-              /* Firefox版本4-18 */
-              &::-moz-placeholder {
-                color: #0073dd !important;
-              }
-
-              /* Firefox版本19+ */
-              &:-ms-input-placeholder {
-                color: #0073dd !important;
-              }
-            }
-
-            .ivu-input-prefix i,
-            .ivu-input-suffix i {
-              color: #fff;
-              font-size: 1.25rem;
-              font-weight: bold;
-            }
-          }
         }
       }
 
@@ -877,15 +836,13 @@
   padding-top: 0;
 }
 
-.ant-tooltip-arrow,
-.ivu-tooltip-arrow {
+.ant-tooltip-arrow {
   border-width: 0;
   // border-bottom-color: rgba(51, 51, 51, 0.8);
   display: none;
 }
 
-.ant-tooltip-inner,
-.ivu-tooltip-inner {
+.ant-tooltip-inner {
   background-color: rgba(51, 51, 51, 0.8);
   border-radius: 8px;
   border: 1px solid #0073dd;

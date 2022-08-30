@@ -44,6 +44,30 @@
      }
    }
 
+   .ant-picker {
+     .ant-picker-active-bar {
+       width: 3.1rem !important;
+       margin-left: 1rem;
+     }
+
+     .ant-picker-input>input {
+       width: 4rem;
+       text-align: center;
+
+       &::placeholder {
+         color: rgba(46, 255, 223, 0.4);
+       }
+     }
+
+     .ant-picker-input>input,
+     .ant-picker-suffix,
+     .ant-picker-separator {
+       font-size: 0.875rem;
+       font-weight: bold;
+       color: #fff;
+     }
+   }
+
    .side-box {
      .toptitle {
        padding-left: 1rem;
@@ -134,52 +158,6 @@
                width: 0.625rem;
                height: 0.125rem;
                background: #fff;
-             }
-
-             // /deep/
-             .ivu-input-wrapper {
-               .ivu-input {
-                 width: 5.625rem;
-                 color: #fff;
-                 font-size: 0.875rem;
-                 font-weight: bold;
-                 border: none;
-                 background: transparent;
-
-                 &.ivu-input-with-suffix {
-                   padding-right: 1.75rem;
-                 }
-
-                 &:focus {
-                   box-shadow: none;
-                 }
-
-                 &::-webkit-input-placeholder {
-                   color: rgba(46, 255, 223, 0.4);
-                 }
-
-                 /* 使用webkit内核的浏览器 */
-                 &:-moz-placeholder {
-                   color: rgba(46, 255, 223, 0.4);
-                 }
-
-                 /* Firefox版本4-18 */
-                 &::-moz-placeholder {
-                   color: rgba(46, 255, 223, 0.4);
-                 }
-
-                 /* Firefox版本19+ */
-                 &:-ms-input-placeholder {
-                   color: rgba(46, 255, 223, 0.4);
-                 }
-               }
-
-               .ivu-input-prefix i,
-               .ivu-input-suffix i {
-                 color: #fff;
-                 font-size: 1rem;
-                 font-weight: bold;
-               }
              }
            }
 
@@ -378,7 +356,7 @@
                  @include background-style();
                  cursor: pointer;
 
-                 .ivu-icon {
+                 .anticon {
                    font-size: 1.25rem;
                    opacity: 0;
                  }
@@ -387,7 +365,7 @@
                    font-weight: bold;
                    background-image: url(../../assets/images/letter-visit/map-item-active-bg.png);
 
-                   .ivu-icon {
+                   .anticon {
                      opacity: 1;
                    }
                  }
@@ -468,6 +446,11 @@
                    left: 13rem;
                    width: 6rem;
                    height: 1.875rem;
+
+                   .more {
+                     top: 85%;
+                     right: 80%;
+                   }
 
                    &.active-map {
                      .name {
