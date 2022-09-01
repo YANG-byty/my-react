@@ -835,7 +835,7 @@ class sport extends Component {
                   </div>
                   {/* 预警详情 */}
                   {/* 处置详情 */}
-                  {/* {this.state.type == 1 ? (
+                  {this.state.type == 1 ? (
                     <div className="collapse-wrap">
                       {this.state.collapseList.map((item, index) => (
                         <div key={index}>
@@ -972,7 +972,7 @@ class sport extends Component {
                         )}
                       </div>
                     </div>
-                  )} */}
+                  )}
                 </div>
               </div>
             </div>
