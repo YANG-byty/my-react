@@ -85,79 +85,9 @@
         background-position: left center;
       }
 
-      .side-box {
-        &.info {
-          height: 2rem;
-
-          .all,
-          .city {
-            padding: 0 1rem;
-            margin-right: 1rem;
-            color: #fff;
-            font-weight: bold;
-          }
-
-          .line {
-            margin: 0 0.5rem;
-            width: 0.625rem;
-            height: 0.125rem;
-            background: #fff;
-          }
-
-          .line-y {
-            margin: 0 0.5rem;
-            width: 0.125rem;
-            height: 1rem;
-            background: #fff;
-          }
-
-          //  /deep/
-          .ivu-input-wrapper {
-            .ivu-input {
-              width: 6.875rem;
-              color: #fff;
-              font-size: 1rem;
-              font-weight: bold;
-              border: none;
-              background: transparent;
-
-              &:focus {
-                box-shadow: none;
-              }
-
-              &::-webkit-input-placeholder {
-                color: #0073dd !important;
-              }
-
-              /* 使用webkit内核的浏览器 */
-              &:-moz-placeholder {
-                color: #0073dd !important;
-              }
-
-              /* Firefox版本4-18 */
-              &::-moz-placeholder {
-                color: #0073dd !important;
-              }
-
-              /* Firefox版本19+ */
-              &:-ms-input-placeholder {
-                color: #0073dd !important;
-              }
-            }
-
-            .ivu-input-prefix i,
-            .ivu-input-suffix i {
-              color: #fff;
-              font-size: 1.25rem;
-              font-weight: bold;
-            }
-          }
-        }
-      }
-
       .inner {
         position: relative;
-        padding: 1.25rem 32.75rem 1.5rem 32.75rem;
+        padding: 1.25rem 32.75rem 1.25rem 32.75rem;
 
         .side-box {
           padding: 0 1rem;
@@ -256,11 +186,10 @@
             padding: 1.5rem 0;
             height: 25.625rem;
 
-            :deep(.leftChart-mask) {
+            .leftChart-mask {
               padding: 0.5rem;
               border: 1px solid #0073dd;
               border-radius: 0.25rem;
-              background: rgba(51, 51, 51, 0.6);
 
               .item {
                 line-height: 2.25rem;
@@ -407,28 +336,12 @@
                 height: 2.25rem;
               }
 
-              :deep(.ivu-tooltip) {
-                .icon {
-                  padding: 0 0.5rem;
-                  vertical-align: middle;
-                }
-
-                .ivu-tooltip-inner {
-                  border-radius: 0.5rem;
-                  border: 1px solid #0073dd;
-                  background: rgba(51, 51, 51, 0.8);
-                }
-
-                .txt {
-                  font-size: 0.75rem;
-
-                  span {
-                    color: #faff00;
-                  }
-                }
+              .name {
+                margin-right: .5rem;
               }
 
               .tag {
+                margin-left: .5rem;
                 padding: 0 0.5rem;
                 height: 1.5rem;
                 line-height: 1.5rem;
@@ -444,6 +357,7 @@
                 background: rgba(0, 115, 221, 0.3);
                 border-radius: 50%;
                 margin-left: 0.5rem;
+                font-size: .8rem
               }
 
               .progress-bar {
@@ -634,6 +548,11 @@
                 height: 1.875rem;
                 opacity: 1;
                 visibility: visible;
+
+                .more {
+                  top: 90%;
+                  right: 5rem;
+                }
 
                 &.active-map {
                   .name {
@@ -888,6 +807,14 @@
               }
             }
 
+            #maxMap {
+              top: 3rem;
+              left: 0;
+              width: 30.5rem;
+              height: 24rem;
+              background-repeat: round;
+            }
+
             .map-name {
               position: absolute;
               bottom: 0;
@@ -1007,6 +934,27 @@
           }
         }
       }
+    }
+  }
+}
+
+.ant-tooltip {
+  .icon {
+    padding: 0 0.5rem;
+    vertical-align: middle;
+  }
+
+  .ant-tooltip-inner {
+    border-radius: 0.5rem;
+    border: 1px solid #0073dd;
+    background: rgba(51, 51, 51, 0.8);
+  }
+
+  .txt {
+    font-size: 0.75rem;
+
+    span {
+      color: #faff00;
     }
   }
 }

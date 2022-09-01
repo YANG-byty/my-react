@@ -271,7 +271,6 @@
              }
 
              .chart-box {
-               margin-top: 0.5rem;
                height: 16.5rem;
              }
 
@@ -706,6 +705,14 @@
                      visibility: visible;
                    }
                  }
+               }
+
+               #maxMap {
+                 top: 2rem;
+                 left: 0;
+                 width: 27rem;
+                 height: 22rem;
+                 background-repeat: round;
                }
              }
            }

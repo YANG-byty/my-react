@@ -32,15 +32,9 @@
         align-items: center;
       }
 
-      .side-box {
-        &.info {
-          height: 2rem;
-        }
-      }
-
       .inner {
         position: relative;
-        padding: 1.25rem 32.75rem 1.5rem 32.75rem;
+        padding: 1.25rem 32.75rem 1.25rem 32.75rem;
 
         .side-box {
           padding: 0 1rem;

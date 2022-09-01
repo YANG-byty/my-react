@@ -218,7 +218,7 @@ class forestry extends Component {
       if (this.state.areaMapTabIndex != index) {
         this.setState({
           areaMapTabIndex: index,
-          areaMapTitle: item.title,
+          areaMapTitle: item.name,
           areaId: index == 0 ? '' : this.state.areaMapList[index - 1].id,
         })
         if (index != 1) {
@@ -234,7 +234,7 @@ class forestry extends Component {
       if (this.state.areaMapTabIndex != index) {
         this.setState({
           areaMapTabIndex: index,
-          areaMapTitle: item.title,
+          areaMapTitle: item.name,
           areaId: index == 0 ? '' : this.state.areaMapList[index - 1].id,
         })
       }
@@ -841,8 +841,46 @@ class forestry extends Component {
                         </div>
                       ))}
                     </div>
+                    {/* 显示大图 */}
                     {/* 地图 */}
-                    {!this.state.showMaxMap ? (
+                    {this.state.showMaxMap ? (
+                      <div
+                        className="map-box"
+                        style={{ backgroundImage: 'none', cursor: 'pointer' }}
+                        onClick={() =>
+                          this.setState({
+                            showMaxMap: false,
+                          })
+                        }
+                      >
+                        <div
+                          className={classNames(
+                            'item',
+                            'active-map',
+                            this.state.maxMapObj.nameEn
+                          )}
+                          id="maxMap"
+                        >
+                          <div className="name">
+                            {this.state.maxMapObj.name}
+                          </div>
+                          <div className="more" style={{ right: '27rem' }}>
+                            <ul>
+                              {this.state.maxMapObj.dataList.map(
+                                (value, idx) => (
+                                  <li className="flex-row col-center" key={idx}>
+                                    <em></em>
+                                    <span>
+                                      {value.name + '（' + value.count + '）'}
+                                    </span>
+                                  </li>
+                                )
+                              )}
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
                       <div className="map-box" v-if="">
                         {this.state.areaMapList.map((item, index) => (
                           <div
@@ -895,49 +933,6 @@ class forestry extends Component {
                             : ''}
                         </div>
                       </div>
-                    ) : (
-                      ''
-                    )}
-                    {/* 显示大图 */}
-                    {this.state.showMaxMap ? (
-                      <div
-                        className="map-box"
-                        style={{ backgroundImage: 'none', cursor: 'pointer' }}
-                        onClick={() =>
-                          this.setState({
-                            showMaxMap: false,
-                          })
-                        }
-                      >
-                        <div
-                          className={classNames(
-                            'item',
-                            'active-map',
-                            this.state.maxMapObj.nameEn
-                          )}
-                          id="maxMap"
-                        >
-                          <div className="name">
-                            {this.state.maxMapObj.name}
-                          </div>
-                          <div className="more" style={{ right: '27rem' }}>
-                            <ul>
-                              {this.state.maxMapObj.dataList.map(
-                                (value, idx) => (
-                                  <li className="flex-row col-center" key={idx}>
-                                    <em></em>
-                                    <span>
-                                      {value.name + '（' + value.count + '）'}
-                                    </span>
-                                  </li>
-                                )
-                              )}
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                    ) : (
-                      ''
                     )}
                   </div>
                   <ul className="model-wrap">

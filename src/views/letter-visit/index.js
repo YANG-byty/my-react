@@ -1,9 +1,12 @@
 import React, { Component } from 'react'
 import classNames from 'classnames' //样式类合并器
 import * as echarts from 'echarts'
+import moment from 'moment'
 import { CaretRightOutlined } from '@ant-design/icons'
 import './style.scss'
 import CountUp from 'react-countup'
+import JsSeamlessScroll from '../../components/JsSeamlessScroll'
+import data from './data'
 import { DatePicker } from 'antd'
 const { RangePicker } = DatePicker
 
@@ -11,81 +14,10 @@ class letterVisit extends Component {
   constructor(porps) {
     super(porps)
     this.state = {
-      areaMapTitle: '',
-      conditionsObj: {
-        total: 123456,
-        model: [
-          {
-            count: 0,
-            id: '1564296827496148993',
-            name: '办理单位越级访、极端访预警',
-          },
-          {
-            count: 0,
-            id: '1564418680407568385',
-            name: '二年级查处模型',
-          },
-          {
-            count: 118,
-            id: '1564418680424345602',
-            name: '批准逮捕案件二次延期超期未移送-经济案件',
-          },
-        ],
-      },
-      fundsLatitudeObj: {
-        yearTotal: 4876324,
-        restore: 4876324,
-        area: {
-          云和: 10,
-          市本级: 20,
-          庆元: 30,
-          景宁: 40,
-          松阳: 50,
-          缙云: 60,
-          莲都: 70,
-          遂昌: 80,
-          青田: 90,
-          龙泉: 120,
-        },
-      },
-      modelTypeList: [
-        {
-          count: 118,
-          id: '1',
-          name: '信访事项办理',
-        },
-        {
-          count: 0,
-          id: '2',
-          name: '化解资金使用',
-        },
-        {
-          count: 0,
-          id: '3',
-          name: '信访事项督查',
-        },
-      ],
-      petitionModelTypeId: '',
-      showMaxMap: false,
-      maxMapObj: {},
-      areaMapList: [
-        {
-          id: '1',
-          name: '市本级',
-          nameEn: 'shibenji',
-          dataList: [
-            {
-              name: '红色预警',
-              value: [
-                {
-                  count: '(118)',
-                  id: '1564418680424345602',
-                  name: '批准逮捕案件二次延期超期未移送-经济案件',
-                },
-              ],
-            },
-          ],
-        },
+      ...data,
+      nowTime: [
+        moment(new Date()).format('YYYY-MM-DD').split('-'),
+        moment(new Date()).format('HH:mm:ss'),
       ],
     }
   }
@@ -231,8 +163,8 @@ class letterVisit extends Component {
       })
       if (index != 1) {
         this.setState({
+          maxMapObj: item,
           showMaxMap: true,
-          maxMapOb: item,
         })
       }
     } else {
@@ -247,9 +179,244 @@ class letterVisit extends Component {
       areaId: '',
     })
   }
+  getNowTime() {
+    this.setState({
+      nowTime: [
+        moment(new Date()).format('YYYY-MM-DD').split('-'),
+        moment(new Date()).format('HH:mm:ss'),
+      ],
+    })
+  }
+  getDayFn() {
+    let index = new Date().getDay()
+    let time = [
+      '星期日',
+      '星期一',
+      '星期二',
+      '星期三',
+      '星期四',
+      '星期五',
+      '星期六',
+    ]
+    this.setState({
+      dayTime: time[index],
+    })
+  }
+  // 历年预警趋势对比
+  rightChartBoxOne() {
+    let data = this.state.trendContrastList
+    let xData = [],
+      xDataBar = [],
+      arr = []
+    let colors = [
+      ['#0262FD', '#022A7A'],
+      ['#FA7524', '#232A5A'],
+      ['#712CDD', '#081C65'],
+      ['#BF702B', '#2E2B51'],
+      ['#9EC857', '#182550'],
+    ]
+    for (let i = 0; i < Math.ceil(data.length / 5); i++) {
+      colors = colors.concat(colors)
+    }
+    data.map((item, index) => {
+      xData.push(item.year)
+      arr.push(item.count)
+      xDataBar.push({
+        value: item.count,
+        itemStyle: {
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            { offset: 0, color: colors[index][0] },
+            { offset: 1, color: colors[index][1] },
+          ]),
+        },
+      })
+    })
+    let myChart = echarts.init(document.getElementById('rightChartOne'))
+    window.addEventListener('resize', () => {
+      myChart.resize()
+    })
+    myChart.setOption({
+      tooltip: {
+        trigger: 'axis',
+        // padding: 0,
+        axisPointer: {
+          type: 'shadow',
+          textStyle: {
+            color: '#fff',
+          },
+        },
+        formatter: function (val) {
+          let index = val[0].dataIndex
+          let list = data[index].areaJson
+          let keys = Object.keys(list)
+          let values = Object.values(list)
+          var text = `<div class="flex-row row-between" style="color:#00F0FF">丽水市 <span style="margin-left:10px">${data[index].count}条</span></div>`
+          keys.map((item, idx) => {
+            text += `<div class="flex-row row-between">${item} <span style="margin-left:10px">${values[idx]}</span></div>`
+          })
+          return `<div >${text}</div>`
+        },
+      },
+      grid: {
+        top: '30',
+        left: '10',
+        right: '10',
+        bottom: '10',
+        containLabel: true,
+      },
+      color: ['#F3921F'],
+      xAxis: [
+        {
+          type: 'category',
+          axisLine: {
+            lineStyle: {
+              color: '#61919C',
+              width: 1,
+            },
+          },
+          axisTick: {
+            //刻度线
+            show: false,
+          },
+          axisLine: {
+            show: false,
+          },
+          //网格线
+          splitLine: {
+            show: true,
+            lineStyle: {
+              width: 1,
+              color: '#525885',
+              type: 'dotted',
+            },
+          },
+          axisLabel: {
+            interval: 0,
+            textStyle: {
+              color: '#fff',
+              fontSize: 12,
+            },
+          },
+          data: xData,
+          axisPointer: {
+            type: 'shadow',
+          },
+        },
+      ],
+      yAxis: [
+        {
+          type: 'value',
+          name: '条',
+          nameTextStyle: {
+            color: '#fff',
+          },
+          axisLabel: {
+            textStyle: {
+              color: '#fff',
+              fontSize: 12,
+              formatter: '{value}',
+            },
+          },
+          axisLine: {
+            show: false,
+          },
+          //网格线
+          splitLine: {
+            show: true,
+            lineStyle: {
+              width: 1,
+              color: '#525885',
+              type: 'dotted',
+            },
+          },
+        },
+      ],
+      series: [
+        {
+          name: '',
+          type: 'bar',
+          barWidth: 16,
+          data: xDataBar,
+        },
+        {
+          data: arr,
+          type: 'line',
+          smooth: true,
+          symbolSize: 8,
+          color: '#0E9CFF',
+        },
+      ],
+    })
+  }
+  // 热点关注
+  hotAttention() {
+    let data = this.state.hotAttentionList
+    let datas = []
+    data.splice(data.length - 20).map((item, index) => {
+      let colorStr = `rgb(${Math.floor(Math.random() * 256)}, ${Math.floor(
+        Math.random() * 256
+      )}, ${Math.floor(Math.random() * 256)})`
+      datas.push({
+        name: item.name + '\n' + item.value,
+        value: item.value,
+        symbolSize: Number(60) + index * 2,
+        draggable: true,
+        itemStyle: {
+          normal: {
+            // borderColor: colorStr,
+            // borderWidth: 4,
+            // shadowBlur: 100,
+            // shadowColor: colorStr,
+            color: colorStr,
+          },
+        },
+      })
+    })
+    let myChart = echarts.init(document.getElementById('hot-attention'))
+    window.addEventListener('resize', () => {
+      myChart.resize()
+    })
+    myChart.setOption({
+      animationDurationUpdate: function (idx) {
+        // 越往后的数据延迟越大
+        return idx * 100
+      },
+      animationEasingUpdate: 'bounceIn',
+      color: ['#fff', '#fff', '#fff'],
+      series: [
+        {
+          type: 'graph',
+          layout: 'force',
+          force: {
+            repulsion: 200,
+            edgeLength: 10,
+          },
+          roam: true,
+          label: {
+            normal: {
+              show: true,
+              lineHeight: 18,
+            },
+          },
+          data: datas,
+        },
+      ],
+    })
+  }
 
   componentDidMount() {
+    let contrastList = this.state.contrastList
+    contrastList.map((item, index) => {
+      return (item.iconImg = this.state.typeImgList[index])
+    })
+    this.setState({
+      contrastList,
+    })
     this.leftChartBoxOne()
+    setInterval(() => this.getNowTime(), 1000)
+    this.getDayFn()
+    this.rightChartBoxOne()
+    this.hotAttention()
   }
 
   render() {
@@ -299,7 +466,7 @@ class letterVisit extends Component {
                               start={0}
                               end={this.state.conditionsObj.total}
                               duration="3"
-                              redraw={true}
+                              redraw={false}
                               separator=","
                             />
                           </span>
@@ -324,7 +491,7 @@ class letterVisit extends Component {
                           start={0}
                           end={this.state.fundsLatitudeObj.yearTotal}
                           duration="3"
-                          redraw={true}
+                          redraw={false}
                           separator=","
                         />
                       </span>
@@ -348,7 +515,7 @@ class letterVisit extends Component {
                           start={0}
                           end={this.state.fundsLatitudeObj.restore}
                           duration="3"
-                          redraw={true}
+                          redraw={false}
                           separator=","
                         />
                       </span>
@@ -375,7 +542,7 @@ class letterVisit extends Component {
                             start={0}
                             end={item.count}
                             duration="2"
-                            redraw={true}
+                            redraw={false}
                             separator=","
                           />
                         </div>
@@ -481,6 +648,238 @@ class letterVisit extends Component {
                       ))}
                     </div>
                   )}
+                </div>
+                <div className="side-box">
+                  <div className="toptitle">
+                    <span>子场景预警占比</span>
+                  </div>
+                  <div className="inner">
+                    <div className="model-proportion flex-row">
+                      {this.state.contrastList.map((item, index) => (
+                        <div
+                          className="item flex-col flex-one col-center"
+                          key={index}
+                        >
+                          <div className="icon flex-row col-center row-center">
+                            <img src={item.iconImg} alt="" />
+                          </div>
+                          <div className="number">{item.percentage}</div>
+                          <div className="name omit-two">{item.name}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="bottom-side mt">
+              <div className="side-box">
+                <div className="toptitle">
+                  <span>预警情况</span>
+                </div>
+                <div className="inner flex-row row-between">
+                  <div className="warn-type flex-row">
+                    <div className="item red flex-one">
+                      <div className="flex-row">
+                        <div className="icon flex-row col-center row-center">
+                          <img
+                            src={require('../../assets/images/letter-visit/red-warn.png')}
+                            alt=""
+                          />
+                        </div>
+                        <div className="flex-col">
+                          <div className="name">红色预警量</div>
+                          <div className="text">
+                            <span className="number">
+                              {this.state.warningObj.redCount}
+                            </span>
+                            条
+                          </div>
+                        </div>
+                      </div>
+                      <div className="progress">
+                        <ul>
+                          {this.state.warningConditionObj.red.map(
+                            (item, index) => (
+                              <li className="flex-row col-center" key={index}>
+                                <div className="label">{item.name}</div>
+                                <div className="number">{item.count}</div>
+                                <div className="progress-bg">
+                                  <span
+                                    className={classNames(
+                                      index == 0
+                                        ? 'blue'
+                                        : index == 1
+                                        ? 'yellow'
+                                        : 'green'
+                                    )}
+                                    style={{ width: item.percentage }}
+                                  ></span>
+                                </div>
+                                <div>{item.percentage}</div>
+                              </li>
+                            )
+                          )}
+                        </ul>
+                      </div>
+                    </div>
+                    <div className="item yellow flex-one">
+                      <div className="flex-row">
+                        <div className="icon flex-row col-center row-center">
+                          <img
+                            src={require('../../assets/images/letter-visit/yellow-warn.png')}
+                            alt=""
+                          />
+                        </div>
+                        <div className="flex-col">
+                          <div className="name">流转预警量</div>
+                          <div className="text">
+                            <span className="number">
+                              {this.state.warningObj.yellowCount}
+                            </span>
+                            条
+                          </div>
+                        </div>
+                      </div>
+                      <div className="progress">
+                        <ul>
+                          {this.state.warningConditionObj.yellow.map(
+                            (item, index) => (
+                              <li className="flex-row col-center" key={index}>
+                                <div className="label">{item.name}</div>
+                                <div className="number">{item.count}</div>
+                                <div className="progress-bg">
+                                  <span
+                                    className={classNames(
+                                      index == 0
+                                        ? 'blue'
+                                        : index == 1
+                                        ? 'yellow'
+                                        : 'green'
+                                    )}
+                                    style={{
+                                      width: item.percentage,
+                                    }}
+                                  ></span>
+                                </div>
+                                <div>{item.percentage}</div>
+                              </li>
+                            )
+                          )}
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="table-box">
+                    <div className="thead">
+                      <div className="column one">类型</div>
+                      <div className="column two">预警时间</div>
+                      <div className="column three">信访人姓名</div>
+                      <div className="column five">预警内容</div>
+                      <div className="column six">处理状态</div>
+                    </div>
+                    <div className="tbody">
+                      {this.state.listData.length > 0 ? (
+                        <JsSeamlessScroll
+                          className="seamless-warp list"
+                          data={this.state.listData}
+                          singleHeight={31}
+                          singleWaitTime={2000}
+                          hover={true}
+                          scrollSwitch={this.state.listData.length > 3}
+                        >
+                          {this.state.listData.map((item, index) => (
+                            <div className="item" key={index}>
+                              <div className="column one">
+                                <span
+                                  className={classNames(
+                                    item.status == '红' ? 'red' : 'yellow'
+                                  )}
+                                >
+                                  {item.status}
+                                </span>
+                              </div>
+                              <div className="column two omit">
+                                {item.warningTime}
+                              </div>
+                              <div className="column three">{item.name}</div>
+                              <div className="column five omit">
+                                {item.warningContent}
+                              </div>
+                              <div className="column six omit">
+                                {item.disposeStatusStr}
+                              </div>
+                            </div>
+                          ))}
+                        </JsSeamlessScroll>
+                      ) : (
+                        <div className="no-data">暂无数据</div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="right-side">
+              <div className="time-info flex-row col-center">
+                <div className="time">{this.state.nowTime[1]}</div>
+                <div className="week">
+                  {this.state.nowTime[0][0] +
+                    '年' +
+                    this.state.nowTime[0][1] +
+                    '月' +
+                    this.state.nowTime[0][2] +
+                    '日'}
+                  <span>{this.state.dayTime}</span>
+                </div>
+              </div>
+              <div className="side-box mt">
+                <div className="toptitle">
+                  <span>高频问题</span>
+                </div>
+                <div className="inner">
+                  <div className="problem-list flex-row">
+                    {this.state.frequencyList.map((item, index) => (
+                      <div className="item" key={index}>
+                        <div className="order">
+                          {index + 1 < 10 ? '0' + (index + 1) : index}
+                        </div>
+                        <div className="flex-col row-center">
+                          <p>
+                            <span className="number">{item.count}</span>条
+                          </p>
+                          <p>{item.percentage}</p>
+                          <p className="omit">{item.name}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <div className="side-box mt">
+                <div className="toptitle">
+                  <span>历年预警趋势对比</span>
+                </div>
+                <div className="inner">
+                  <div className="chart-box">
+                    <div
+                      id="rightChartOne"
+                      style={{ width: ' 100%', height: '100%' }}
+                    ></div>
+                  </div>
+                </div>
+              </div>
+              <div className="side-box mt">
+                <div className="toptitle">
+                  <span>热点关注</span>
+                </div>
+                <div className="inner" style={{ padding: 0 }}>
+                  <div className="hot-attention-wrap">
+                    <div
+                      id="hot-attention"
+                      style={{ width: '100%', height: '100%' }}
+                    ></div>
+                  </div>
                 </div>
               </div>
             </div>

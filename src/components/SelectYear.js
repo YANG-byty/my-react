@@ -6,33 +6,41 @@ const { RangePicker } = DatePicker
 export default class Sidebar extends Component {
   constructor(props) {
     super(props)
-    this.areaMapTitle = props.areaMapTitle
-    this.timeObj = {
-      startTime: '',
-      endTime: '',
+    this.state = {
+      timeObj: {},
+      areaMapTitle: '',
     }
   }
-
+  // 选择时间
   changeTimeFn = (e) => {
     if (e == null) {
-      this.timeObj.startTime = ''
-      this.timeObj.endTime = ''
+      this.state.timeObj = {}
     } else {
-      this.timeObj.startTime = moment(e[0]).format('yyyy')
-      this.timeObj.endTime = moment(e[1]).format('yyyy')
+      let timeObj = {
+        startTime: moment(e[0]).format('yyyy'),
+        endTime: moment(e[1]).format('yyyy'),
+      }
+      this.state.timeObj = timeObj
     }
-
     // 向父组件传值
-    this.props.setTime(this.timeObj)
+    this.props.setTime(this.state.timeObj)
+  }
+
+  // 监听props变化
+  static getDerivedStateFromProps(props, state) {
+    if (props.areaMapTitle != state.areaMapTitle) {
+      return {
+        areaMapTitle: props.areaMapTitle,
+      }
+    }
+    return null
   }
 
   render() {
     return (
       <div className="select-year side-box info flex-row col-center row-center">
         <div className="year flex-row col-center">
-          <div className="all" onClick={this.clearTime}>
-            全部
-          </div>
+          <div className="all">全部</div>
           <RangePicker
             bordered={false}
             inputReadOnly={true}
@@ -42,7 +50,7 @@ export default class Sidebar extends Component {
         </div>
         <div className="line-y"></div>
         <div className="city">
-          丽水市{this.areaMapTitle ? ' · ' + this.areaMapTitle : ''}
+          丽水市{this.state.areaMapTitle ? ' · ' + this.state.areaMapTitle : ''}
         </div>
       </div>
     )

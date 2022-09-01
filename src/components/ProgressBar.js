@@ -4,22 +4,30 @@ import * as echarts from 'echarts'
 export default class ProgressBar extends Component {
   constructor(props) {
     super(props)
-    this.progressBar = props.progressBar || 'progress-bar'
-    this.color = props.color || '#FF4444'
-    this.data = props.data || [0, 100]
+    this.state = {
+      progressBar: props.progressBar || 'progress-bar',
+      color: props.color || '#FF4444',
+      data: props.data || [0, 100],
+      progressBarChart: this.progressBarChart.bind(this),
+    }
   }
   // 进度条
-  progressBarChart() {
-    let myChart = echarts.init(document.getElementById(this.progressBar))
+  progressBarChart(props) {
+    let chartDom = document.getElementById(props.progressBar)
+    let myChart = echarts.getInstanceByDom(chartDom)
+    if (!myChart) {
+      // 如果不存在则创建
+      myChart = echarts.init(chartDom)
+    }
     window.addEventListener('resize', () => {
       myChart.resize()
     })
-    let chartData = [[this.data[0]], ['CCC']]
+    let chartData = [[props.data[0]], ['CCC']]
     let getmyd = chartData[0] //收入金额
     let getmydzd = []
 
     // const max = Math.ceil(this.calMax([getmyd]) / 10) * 10;
-    const max = this.data[1]
+    const max = props.data[1]
     // let big = 0;
     // getmyd.forEach((el) => {
     //   if (!(el === undefined || el === '' || el === 0)) {
@@ -184,11 +192,11 @@ export default class ProgressBar extends Component {
                 colorStops: [
                   {
                     offset: 0,
-                    color: this.color, // 0% 处的颜色
+                    color: props.color, // 0% 处的颜色
                   },
                   {
                     offset: 1,
-                    color: this.color, // 100% 处的颜色
+                    color: props.color, // 100% 处的颜色
                   },
                 ],
               },
@@ -270,13 +278,32 @@ export default class ProgressBar extends Component {
         },
       ],
     }
-    myChart.setOption(option)
+
+    myChart.setOption(option, true)
+
+    // 解决重复触发点击事件
+    // myChart.off('click').on('click', (param) => {
+    //   props.handleGraphClick(param)
+    // })
   }
   componentDidMount() {
-    this.progressBarChart()
+    this.progressBarChart(this.state)
+  }
+
+  // 监听props变化
+  static getDerivedStateFromProps(props, state) {
+    if (props.data != state.data) {
+      return {
+        progressBar: props.progressBar,
+        color: props.color,
+        data: props.data,
+        model: state.progressBarChart(props),
+      }
+    }
+    return null
   }
 
   render() {
-    return <div className="progress-bar" id={this.progressBar}></div>
+    return <div className="progress-bar" id={this.state.progressBar}></div>
   }
 }
