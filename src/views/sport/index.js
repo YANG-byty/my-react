@@ -13,7 +13,7 @@ class sport extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      ...data,
+      ...data.data,
     }
   }
   // 获取子组件的选中的时间

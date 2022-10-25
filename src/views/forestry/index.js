@@ -9,10 +9,11 @@ import SelectYear from '../../components/SelectYear'
 import ProgressBar from '../../components/ProgressBar'
 import CircinateChart from '../../components/CircinateChart'
 
+console.log(process.env)
 class forestry extends Component {
   constructor(props) {
     super(props)
-    this.state = { ...data }
+    this.state = { ...data.data }
   }
   // 获取子组件的选中的时间
   setTime(data) {

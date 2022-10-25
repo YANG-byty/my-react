@@ -14,7 +14,7 @@ class letterVisit extends Component {
   constructor(porps) {
     super(porps)
     this.state = {
-      ...data,
+      ...data.data,
       nowTime: [
         moment(new Date()).format('YYYY-MM-DD').split('-'),
         moment(new Date()).format('HH:mm:ss'),
